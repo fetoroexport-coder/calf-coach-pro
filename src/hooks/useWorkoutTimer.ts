@@ -179,8 +179,13 @@ export const useWorkoutTimer = (
     if (state.isRunning && !state.isComplete) {
       intervalRef.current = setInterval(() => {
         setState(prev => {
-          if (prev.phaseTimer > 1) {
-            return { ...prev, phaseTimer: prev.phaseTimer - 1 };
+          if (prev.phaseTimer > 0) {
+            const newTimer = prev.phaseTimer - 1;
+            if (newTimer === 0) {
+              // Timer reached 0, will trigger advance in next tick
+              return { ...prev, phaseTimer: 0 };
+            }
+            return { ...prev, phaseTimer: newTimer };
           }
           return prev;
         });
@@ -193,7 +198,7 @@ export const useWorkoutTimer = (
   }, [state.isRunning, state.isComplete]);
 
   useEffect(() => {
-    if (state.isRunning && state.phaseTimer <= 0 && !state.isComplete) {
+    if (state.isRunning && state.phaseTimer === 0 && !state.isComplete) {
       advanceToNextState();
     }
   }, [state.phaseTimer, state.isRunning, state.isComplete, advanceToNextState]);
