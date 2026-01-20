@@ -13,7 +13,7 @@ export const MovementIndicator = ({ phase }: MovementIndicatorProps) => {
       case 'hold':
         return 'translate-y-12 scale-90';
       case 'up':
-        return 'translate-y-0 scale-100';
+        return '-translate-y-8 scale-105';
       case 'rest':
         return 'translate-y-4 scale-100';
       default:
