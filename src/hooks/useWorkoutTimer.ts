@@ -34,6 +34,7 @@ export const useWorkoutTimer = (
   });
 
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const advancingRef = useRef(false);
   const { playDownSound, playStretchSound, playUpSound, playRestSound, playCompleteSound } = useAudio();
 
   const currentExercise = exercises[state.currentExerciseIndex];
@@ -149,7 +150,7 @@ export const useWorkoutTimer = (
         };
       }
 
-      // Move to next exercise
+      // Move to next exercise (with rest period first)
       const nextExerciseIndex = prev.currentExerciseIndex + 1;
       if (nextExerciseIndex >= exercises.length) {
         if (soundEnabled) playCompleteSound();
@@ -157,20 +158,17 @@ export const useWorkoutTimer = (
         return { ...prev, isComplete: true, isRunning: false };
       }
 
-      const nextExercise = exercises[nextExerciseIndex];
-      const nextLeg = nextExercise.isSingleLeg ? 'right' : null;
-      const startPhase = nextExercise.isHold ? 'hold' : 'down';
-      
-      playPhaseSound(startPhase);
+      // Add a rest period before next exercise
+      playPhaseSound('rest');
       return {
         ...prev,
         currentExerciseIndex: nextExerciseIndex,
         currentSet: 1,
         currentRep: 1,
-        currentLeg: nextLeg,
-        phase: startPhase,
-        phaseTimer: getPhaseSeconds(startPhase, nextExercise),
-        isResting: false,
+        currentLeg: exercises[nextExerciseIndex].isSingleLeg ? 'right' : null,
+        phase: 'rest',
+        phaseTimer: exercise.restDuration,
+        isResting: true,
       };
     });
   }, [exercises, getNextPhase, getPhaseSeconds, playPhaseSound, soundEnabled, playCompleteSound, onComplete]);
@@ -198,8 +196,13 @@ export const useWorkoutTimer = (
   }, [state.isRunning, state.isComplete]);
 
   useEffect(() => {
-    if (state.isRunning && state.phaseTimer === 0 && !state.isComplete) {
+    if (state.isRunning && state.phaseTimer === 0 && !state.isComplete && !advancingRef.current) {
+      advancingRef.current = true;
       advanceToNextState();
+      // Reset the flag after a short delay to prevent double-triggers
+      setTimeout(() => {
+        advancingRef.current = false;
+      }, 50);
     }
   }, [state.phaseTimer, state.isRunning, state.isComplete, advanceToNextState]);
 
