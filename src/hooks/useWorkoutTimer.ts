@@ -154,14 +154,14 @@ export const useWorkoutTimer = (
           // All sets done for this exercise - fall through to next exercise
         }
       } else if (!exercise.isSingleLeg && prev.currentSet < exercise.sets) {
-        // Non-single-leg: 3s rest between sets within same exercise
+        // Non-single-leg: full rest between sets
         playPhaseSound('rest');
         return {
           ...prev,
           currentSet: prev.currentSet + 1,
           currentRep: 1,
           phase: 'rest',
-          phaseTimer: 3,
+          phaseTimer: exercise.restDuration,
           isResting: true,
         };
       }
