@@ -123,26 +123,42 @@ export const useWorkoutTimer = (
         };
       }
 
-      // Set complete - check if more sets for this leg
-      if (prev.currentSet < exercise.sets) {
+      // Set complete for single-leg: alternate legs
+      if (exercise.isSingleLeg && prev.currentLeg) {
+        if (prev.currentLeg === 'right') {
+          // Switch to left leg with short 3s transition rest
+          playPhaseSound('rest');
+          return {
+            ...prev,
+            currentLeg: 'left',
+            currentRep: 1,
+            phase: 'rest',
+            phaseTimer: 3,
+            isResting: true,
+          };
+        } else {
+          // Left leg done - both legs completed this set
+          if (prev.currentSet < exercise.sets) {
+            // More sets remain, full rest then back to right
+            playPhaseSound('rest');
+            return {
+              ...prev,
+              currentSet: prev.currentSet + 1,
+              currentLeg: 'right',
+              currentRep: 1,
+              phase: 'rest',
+              phaseTimer: exercise.restDuration,
+              isResting: true,
+            };
+          }
+          // All sets done for this exercise - fall through to next exercise
+        }
+      } else if (!exercise.isSingleLeg && prev.currentSet < exercise.sets) {
+        // Non-single-leg: normal set progression
         playPhaseSound('rest');
         return {
           ...prev,
           currentSet: prev.currentSet + 1,
-          currentRep: 1,
-          phase: 'rest',
-          phaseTimer: exercise.restDuration,
-          isResting: true,
-        };
-      }
-
-      // All sets done for current leg - check if need to switch legs
-      if (exercise.isSingleLeg && prev.currentLeg === 'right') {
-        playPhaseSound('rest');
-        return {
-          ...prev,
-          currentLeg: 'left',
-          currentSet: 1,
           currentRep: 1,
           phase: 'rest',
           phaseTimer: exercise.restDuration,
