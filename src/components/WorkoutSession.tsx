@@ -31,6 +31,7 @@ export const WorkoutSession = ({ day, onBack }: WorkoutSessionProps) => {
     isResting,
     start,
     pause,
+    skipRep,
     skipSet,
     skipLeg,
     skipExercise,

@@ -366,8 +366,13 @@ export const useWorkoutTimer = (
     totalExercises: exercises.length,
     start,
     pause,
+    skipRep,
     skipSet,
     skipLeg,
+    skipExercise,
+    reset,
+  };
+};
     skipExercise,
     reset,
   };
