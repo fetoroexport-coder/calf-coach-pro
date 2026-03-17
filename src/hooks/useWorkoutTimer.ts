@@ -139,7 +139,7 @@ export const useWorkoutTimer = (
         } else {
           // Left leg done - both legs completed this set
           if (prev.currentSet < exercise.sets) {
-            // More sets remain, full rest then back to right
+            // More sets remain, 3s transition rest then back to right
             playPhaseSound('rest');
             return {
               ...prev,
@@ -147,21 +147,21 @@ export const useWorkoutTimer = (
               currentLeg: 'right',
               currentRep: 1,
               phase: 'rest',
-              phaseTimer: exercise.restDuration,
+              phaseTimer: 3,
               isResting: true,
             };
           }
           // All sets done for this exercise - fall through to next exercise
         }
       } else if (!exercise.isSingleLeg && prev.currentSet < exercise.sets) {
-        // Non-single-leg: normal set progression
+        // Non-single-leg: 3s rest between sets within same exercise
         playPhaseSound('rest');
         return {
           ...prev,
           currentSet: prev.currentSet + 1,
           currentRep: 1,
           phase: 'rest',
-          phaseTimer: exercise.restDuration,
+          phaseTimer: 3,
           isResting: true,
         };
       }
