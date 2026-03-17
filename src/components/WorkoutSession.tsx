@@ -149,6 +149,7 @@ export const WorkoutSession = ({ day, onBack }: WorkoutSessionProps) => {
                 currentLeg={currentLeg}
                 onStart={start}
                 onPause={pause}
+                onSkipRep={skipRep}
                 onSkipSet={skipSet}
                 onSkipLeg={skipLeg}
                 onSkipExercise={skipExercise}
