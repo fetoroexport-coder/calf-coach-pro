@@ -373,7 +373,3 @@ export const useWorkoutTimer = (
     reset,
   };
 };
-    skipExercise,
-    reset,
-  };
-};
