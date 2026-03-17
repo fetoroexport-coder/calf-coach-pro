@@ -244,6 +244,26 @@ export const useWorkoutTimer = (
     setState(prev => ({ ...prev, isRunning: false }));
   }, []);
 
+  const skipRep = useCallback(() => {
+    setState(prev => {
+      const exercise = exercises[prev.currentExerciseIndex];
+      if (prev.isResting) return prev;
+
+      // If more reps remain, advance to next rep
+      if (prev.currentRep < exercise.reps) {
+        const startPhase = exercise.isHold ? 'hold' : 'down';
+        return {
+          ...prev,
+          currentRep: prev.currentRep + 1,
+          phase: startPhase,
+          phaseTimer: getPhaseSeconds(startPhase, exercise),
+        };
+      }
+      // Last rep - trigger set completion by setting timer to 0
+      return { ...prev, phaseTimer: 0 };
+    });
+  }, [exercises, getPhaseSeconds]);
+
   const skipSet = useCallback(() => {
     setState(prev => {
       const exercise = exercises[prev.currentExerciseIndex];
@@ -346,6 +366,7 @@ export const useWorkoutTimer = (
     totalExercises: exercises.length,
     start,
     pause,
+    skipRep,
     skipSet,
     skipLeg,
     skipExercise,
