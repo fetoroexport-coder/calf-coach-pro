@@ -9,6 +9,7 @@ interface WorkoutControlsProps {
   currentLeg: Leg;
   onStart: () => void;
   onPause: () => void;
+  onSkipRep: () => void;
   onSkipSet: () => void;
   onSkipLeg: () => void;
   onSkipExercise: () => void;
