@@ -70,6 +70,16 @@ export const WorkoutControls = ({
 
       {/* Skip buttons */}
       <div className="flex items-center gap-3">
+        {!exercise.isHold && (
+          <button
+            onClick={onSkipRep}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-secondary hover:bg-accent transition-colors text-sm font-medium"
+          >
+            Skip Rep
+            <ChevronRight className="w-4 h-4" />
+          </button>
+        )}
+
         <button
           onClick={onSkipSet}
           className="flex items-center gap-2 px-4 py-2 rounded-lg bg-secondary hover:bg-accent transition-colors text-sm font-medium"
