@@ -23,6 +23,7 @@ export const WorkoutControls = ({
   currentLeg,
   onStart,
   onPause,
+  onSkipRep,
   onSkipSet,
   onSkipLeg,
   onSkipExercise,
